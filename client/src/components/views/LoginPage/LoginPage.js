@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import {useDispatch} from 'react-redux';
 import { loginUser } from '../../../_actions/user_action';
 import { withRouter } from 'react-router-dom';
+import './LoginPage.css'
 
 function LoginPage(props) {
     const dispatch = useDispatch();
@@ -43,20 +44,21 @@ function LoginPage(props) {
 
 
     return (
-        <div style={{
-            display: 'flex', justifyContent: 'center', alignItems: 'center'
-            , width: '100%', height: '100vh'
-        }}>
-            <form style = {{ display:'flex', flexDirection: 'column' }}
-            onSubmit={onSubmitHandler}>
-                <label>Email</label>
+        <div className="box1">
+            <form className="formBox" onSubmit={onSubmitHandler}>
+                <div className="Title">Trello</div>
+                <label>이메일</label>
                 <input type="email" value={Email} onChange={onEmailHandler} />
-                <label>Password</label>
+                <label>비밀번호</label>
                 <input type="password" value={Password} onChange={onPasswordHandler} />
                 <br />
                 <button type="submit">
-                    Login
+                    로그인
                 </button>
+
+                <div className="moveToSignUp">
+                    <a href="/register">회원가입</a>
+                </div>
             </form>
         </div>
     )

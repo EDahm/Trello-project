@@ -5,12 +5,11 @@ import {
     AUTH_USER,
     LOGOUT_USER,
 } from './types';
-import { USER_SERVER } from '../components/Config.js';
 
 
 export function loginUser(dataToSubmit) {
 
-    const request = axios.post('${USER_SERVER}/login', dataToSubmit)
+    const request = axios.post('api/users/login', dataToSubmit)
     .then(response => response.data)
 
 
@@ -23,7 +22,7 @@ export function loginUser(dataToSubmit) {
 
 export function registerUser(dataToSubmit) {
 
-    const request = axios.post('${USER_SERVER}/register', dataToSubmit)
+    const request = axios.post('api/users/register', dataToSubmit)
     .then(response => response.data)
 
     return {
@@ -36,7 +35,7 @@ export function registerUser(dataToSubmit) {
 
 export function auth() {
 
-    const request = axios.get('${USER_SERVER}/auth')    // get이라 body부분은 필요가 없음
+    const request = axios.get('api/users/auth')    // get이라 body부분은 필요가 없음
     .then(response => response.data)
 
     return {
@@ -48,7 +47,7 @@ export function auth() {
 
 export function logoutUser() {
 
-    const request = axios.get('${USER_SERVER}/logout') 
+    const request = axios.get('api/users/logout') 
     .then(response => response.data)
 
     return {

@@ -1,11 +1,12 @@
 import React from 'react';
-import { Menu } from 'antd';
 import axios from 'axios';
 import { USER_SERVER } from '../../../Config';
 import { withRouter } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 function RightMenu(props) {
+
+    const user = useSelector(state => state.user)
 
 
     const logoutHandler = () => {
@@ -18,26 +19,24 @@ function RightMenu(props) {
         });
     };
 
-    if (useSelector.userData && !useSelector.userData.isAuth) {
+    if (user.userData && !user.userData.isAuth) {
         return (
-            <Menu mode={props.mode}>
-                <Menu.Item key="mail">
+            <div className="right">
+                <div className="detailRight">
                     <a href="/login">로그인</a>
-                </Menu.Item>
-                <Menu.Item key="app">
+                </div>
+                <div className="detailRight">
                     <a href="/register">회원가입</a>
-                </Menu.Item>
-            </Menu>
+                </div>
+            </div>
         )
     } else {
 
         return (
-            <div>
-                <Menu mode={props.mode}>
-                    <Menu.Item key="logout">
-                        <a onClick={logoutHandler}>로그아웃</a>
-                    </Menu.Item>
-                </Menu>
+            <div className="right">
+                <div className="detailRight">
+                    <a onClick={logoutHandler}>로그아웃</a>
+                </div>
 
             </div>
         )
