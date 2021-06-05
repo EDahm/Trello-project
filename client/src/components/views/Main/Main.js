@@ -30,7 +30,7 @@ function Main(props) {
                 if (response.data.success) {
                     alert('일정이 등록되었습니다.')
                     setDescription('')
-                    props.history.push('/usermain')
+                    window.location.replace("/usermain")
                 } else {
                     alert('일정 등록에 실패했습니다. 다시 등록해주세요.')
                 }
