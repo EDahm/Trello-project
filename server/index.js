@@ -19,6 +19,7 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 app.use('/api/users', require('./routes/users'));
+app.use('/api/list', require('./routes/lists'));
 
 
 

@@ -32,7 +32,7 @@ function LoginPage(props) {
         dispatch(loginUser(body))
         .then(response => {
             if(response.payload.loginSuccess) {
-                props.history.push('/')     // 로그인 성공시 루트 페이지로 이동
+                props.history.push('/usermain')     // 로그인 성공시 루트 페이지로 이동
             } else {
                 alert('Error')
             }

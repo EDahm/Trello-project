@@ -1,6 +1,6 @@
 import Axios from 'axios';
 import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { auth } from '../_actions/user_action';
 
 export default function (SpecificComponent, option, adminRoute = null) {
@@ -10,7 +10,9 @@ export default function (SpecificComponent, option, adminRoute = null) {
     //true => 로그인한 유저만 출입이 가능한 페이지
     //false => 로그인한 유저는 출입 불가능한 페이지
     function AuthenticationCheck(props) {
-        const dispatch = useDispatch();
+
+        let user = useSelector(state => state.user);
+       const dispatch = useDispatch();
 
         useEffect(() => {
 
@@ -25,17 +27,17 @@ export default function (SpecificComponent, option, adminRoute = null) {
                 } else {
                     //로그인한 상태
                     if (adminRoute && !response.payload.isAdmin) { //admin이 아닌데 admin 페이지에 접속하려고 하는 경우
-                        props.history.push('/')
+                        props.history.push('/usermain')
                     } else {
                         if (option === false) //로그인한 유저가 로그인한 유저는 출입 불가능한 페이지에 접속하려고 하는 경우(로그인페이지, 회원가입페이지)
-                            props.history.push('/')
+                            props.history.push('/usermain')
                     }
                 }
             })
         }, [])
 
         return (
-            <SpecificComponent />
+            <SpecificComponent {...props} user={user} />
         )
     }
 
