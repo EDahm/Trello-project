@@ -24,7 +24,7 @@ function Main(props) {
 
         const body = {
             //로그인된 사람의 ID
-            writer: props.user.userData._id,
+            writer: user.userData._id,
             description: Description
         }
 
@@ -39,6 +39,8 @@ function Main(props) {
                 }
             })
     }
+
+
 
 
     // 진행중 리스트 불러오기
@@ -59,78 +61,136 @@ function Main(props) {
     }, [])
 
 
-    const processcingLists = Lists.filter((list) => {
-
-        const currentUser = user.userData._id
-        const state = '진행중'
-
-        return list.writer._id == currentUser && list.state == state
-    }).map((list, index) => {
-
-        //console.log('list', list)
-
-        return <ul key={index}>
-            <li>
-                {list.description}
-                <button>완료</button>
-                <button>삭제</button>
-            </li>
-        </ul>
-    })
+    // const removeList = _id => {
+    //     setLists(Lists.filter(list => list._id !== _id));
+    // };
 
 
-    const doneLists = Lists.filter((list) => {
 
-        const currentUser = user.userData._id
-        const state = '완료'
+    const removeList = (list) => {
 
-        return list.writer._id == currentUser && list.state == state
-    }).map((list, index) => {
+        const body = {
+            _id: list._id,
+            writer: list.writer._id,
+            description: list.description
+        
+        }
 
-        //console.log('list', list)
+        if (window.confirm('해당 일정을 삭제하시겠습니까?\n삭제된 데이터는 복구할 수 없습니다.')) {
+    
+            axios.post("/api/list/delete", body)
+                .then(response => {
+                    if (response.data.success) {
+                        alert('일정이 삭제되었습니다.')
+                        window.location.replace("/usermain")
+                    } else {
+                        alert('일정 삭제에 실패했습니다.')
+                    }
+                })
+        }
+    }
 
-        return <ul key={index}>
-            <li>
-                {list.description}
-                <button>삭제</button>
-            </li>
-        </ul>
-    })
 
 
-    return (
-        <div className="box2">
-            <div>
-                <form onSubmit={submitHandler}>
-                    <br /><br /><br /><br />
-                    <label>일정을 입력해주세요.</label>
-                    <textarea onChange={descriptionChangeHandler} value={Description} />
-                    <button type="submit">확인</button>
 
-                </form>
-            </div>
+    const modifyList = (list) => {
 
-            <div className="processingBox">
-                <h2>진행중</h2>
-                <div>
+        const body = {
+            _id: list._id,
+            writer: list.writer._id
+        }
 
-                    {processcingLists}
+        if (window.confirm('해당 일정을 완료하시겠습니까?')) {
+    
+            axios.post("/api/list/modify", body)
+                .then(response => {
+                    if (response.data.success) {
+                        alert('일정이 완료되었습니다.')
+                        window.location.replace("/usermain")
+                    } else {
+                        alert('일정상태 변경에 실패했습니다.')
+                    }
+                })
+        }
+    }
 
-                </div>
 
-            </div>
 
-            <div className="processingBox">
-                <h2>완료</h2>
-                <div>
 
-                    {doneLists}
 
-                </div>
+const processcingLists = Lists.filter((list) => {
 
-            </div>
+    const currentUser = user.userData._id
+
+    const state = '진행중'
+
+    return list.writer._id === currentUser && list.state === state
+}).map((list, index) => {
+
+    //console.log('list', list)
+
+    return <ul key={index}>
+        <li>
+            {list.description}
+            <button onClick={() => modifyList(list)}>완료</button>
+            <button onClick={() => removeList(list)}>삭제</button>
+        </li>
+    </ul>
+})
+
+
+const doneLists = Lists.filter((list) => {
+
+    const currentUser = user.userData._id
+    const state = '완료'
+
+    return list.writer._id === currentUser && list.state === state
+}).map((list, index) => {
+
+    //console.log('list', list)
+
+    return <ul key={index}>
+        <li>
+            {list.description}
+            <button onClick={() => removeList(list)}>삭제</button>
+        </li>
+    </ul>
+})
+
+
+return (
+    <div className="box2">
+        <div>
+            <form onSubmit={submitHandler}>
+                <br /><br /><br /><br />
+                <label>일정을 입력해주세요.</label>
+                <textarea onChange={descriptionChangeHandler} value={Description} />
+                <button type="submit">확인</button>
+
+            </form>
         </div>
-    )
+
+        <div className="processingBox">
+            <h2>진행중</h2>
+            <div>
+
+                {processcingLists}
+
+            </div>
+
+        </div>
+
+        <div className="processingBox">
+            <h2>완료</h2>
+            <div>
+
+                {doneLists}
+
+            </div>
+
+        </div>
+    </div>
+)
 }
 
 export default Main
