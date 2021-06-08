@@ -2,6 +2,15 @@ import './Main.css';
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { BsPlusSquareFill } from "react-icons/bs";
+import { GoListUnordered, GoTasklist } from "react-icons/go";
+import { MdDone } from "react-icons/md";
+import { RiDeleteBinLine } from "react-icons/ri";
+
+
+
+
+
 
 function Main(props) {
 
@@ -61,10 +70,6 @@ function Main(props) {
     }, [])
 
 
-    // const removeList = _id => {
-    //     setLists(Lists.filter(list => list._id !== _id));
-    // };
-
 
 
     const removeList = (list) => {
@@ -73,11 +78,11 @@ function Main(props) {
             _id: list._id,
             writer: list.writer._id,
             description: list.description
-        
+
         }
 
         if (window.confirm('해당 일정을 삭제하시겠습니까?\n삭제된 데이터는 복구할 수 없습니다.')) {
-    
+
             axios.post("/api/list/delete", body)
                 .then(response => {
                     if (response.data.success) {
@@ -101,7 +106,7 @@ function Main(props) {
         }
 
         if (window.confirm('해당 일정을 완료하시겠습니까?')) {
-    
+
             axios.post("/api/list/modify", body)
                 .then(response => {
                     if (response.data.success) {
@@ -118,79 +123,79 @@ function Main(props) {
 
 
 
-const processcingLists = Lists.filter((list) => {
+    const processcingLists = Lists.filter((list) => {
 
-    const currentUser = user.userData._id
+        const currentUser = user.userData._id
 
-    const state = '진행중'
+        const state = '진행중'
 
-    return list.writer._id === currentUser && list.state === state
-}).map((list, index) => {
+        return list.writer._id === currentUser && list.state === state
+    }).map((list, index) => {
 
-    //console.log('list', list)
+        //console.log('list', list)
 
-    return <ul key={index}>
-        <li>
-            {list.description}
-            <button onClick={() => modifyList(list)}>완료</button>
-            <button onClick={() => removeList(list)}>삭제</button>
-        </li>
-    </ul>
-})
-
-
-const doneLists = Lists.filter((list) => {
-
-    const currentUser = user.userData._id
-    const state = '완료'
-
-    return list.writer._id === currentUser && list.state === state
-}).map((list, index) => {
-
-    //console.log('list', list)
-
-    return <ul key={index}>
-        <li>
-            {list.description}
-            <button onClick={() => removeList(list)}>삭제</button>
-        </li>
-    </ul>
-})
+        return <ul key={index} className="listed">
+            <li>
+                {list.description}
+                <button className="buttonType" onClick={() => removeList(list)}><span id="removeButton"><RiDeleteBinLine /></span></button>
+                <button className="buttonType" onClick={() => modifyList(list)}><span id="doneButton"><MdDone /></span></button>
+            </li>
+        </ul>
+    })
 
 
-return (
-    <div className="box2">
-        <div>
-            <form onSubmit={submitHandler}>
-                <br /><br /><br /><br />
-                <label>일정을 입력해주세요.</label>
-                <textarea onChange={descriptionChangeHandler} value={Description} />
-                <button type="submit">확인</button>
+    const doneLists = Lists.filter((list) => {
 
-            </form>
-        </div>
+        const currentUser = user.userData._id
+        const state = '완료'
 
-        <div className="processingBox">
-            <h2>진행중</h2>
-            <div>
+        return list.writer._id === currentUser && list.state === state
+    }).map((list, index) => {
 
-                {processcingLists}
+        //console.log('list', list)
+
+        return <ul key={index} className="listed">
+            <li>
+                {list.description}
+                <button className="buttonType" onClick={() => removeList(list)}><span id="removeButton"><RiDeleteBinLine /></span></button>
+            </li>
+        </ul>
+    })
+
+
+    return (
+        <div className="box2">
+            <div className="textarea">
+                <form onSubmit={submitHandler}>
+                    <label><span><BsPlusSquareFill /></span> 일정을 입력해주세요</label><br />
+                    <textarea onChange={descriptionChangeHandler} value={Description} />
+                    <br />
+                    <button className="submitButton" type="submit">확인</button>
+
+                </form>
+            </div>
+
+            <div className="processingBox">
+                <h2 class="listTitle"><span><GoListUnordered /></span> 진행중</h2>
+                <div>
+
+                    {processcingLists}
+
+                </div>
 
             </div>
 
-        </div>
+            <div className="processingBox">
+                <h2 class="listTitle"><span><GoTasklist /></span> 완료</h2>
+                <div>
 
-        <div className="processingBox">
-            <h2>완료</h2>
-            <div>
+                    {doneLists}
 
-                {doneLists}
+                </div>
 
             </div>
-
         </div>
-    </div>
-)
+    )
 }
 
 export default Main
